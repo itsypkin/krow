@@ -19,13 +19,19 @@ class MyNullableTest {
             "qax" to listOf("qax1", "qax2", "qax3")
         )
 
-        val foo = myMap.get("foo")
+        val foo: List<String>? = myMap.get("foo")
 
         assertEquals(3, (foo?.size))
 
+        val user = User("dsada", 12)
+
     }
+
+
 }
 
 
+
+data class User(val name: String, val age: Int?)
 
 
