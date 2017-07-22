@@ -1,0 +1,35 @@
+group 'de.itsypkin.foo'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    ext {
+        kotlin_version = '1.1.2-2'
+        vertx_version = '3.4.2'
+    }
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+apply plugin: 'kotlin'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    compile "io.vertx:vertx-core:$vertx_version"
+    compile "io.vertx:vertx-web:$vertx_version"
+    compile "io.vertx:vertx-redis-client:$vertx_version"
+    compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.8.7"
+}
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}
