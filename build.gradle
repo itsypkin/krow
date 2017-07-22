@@ -23,10 +23,12 @@ repositories {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     compile "io.vertx:vertx-core:$vertx_version"
     compile "io.vertx:vertx-web:$vertx_version"
     compile "io.vertx:vertx-redis-client:$vertx_version"
     compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.8.7"
+    compile 'junit:junit:4.12'
 }
 kotlin {
     experimental {

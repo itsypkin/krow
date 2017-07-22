@@ -12,7 +12,6 @@ import io.vertx.core.AbstractVerticle
 import io.vertx.core.Future
 import io.vertx.core.Handler
 import io.vertx.ext.web.Router
-import io.vertx.ext.web.Router.router
 import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.handler.BodyHandler
 import java.util.*
@@ -32,20 +31,21 @@ class HttpVerticle(val redisService: RedisService) : AbstractVerticle() {
         val server = vertx.createHttpServer()
 
         server.requestHandler { router.accept(it) }
-            .listen(port) { res ->
-                if (res.succeeded()) {
-                    println("server is running on port $port")
-                    startFuture?.complete()
-                } else {
-                    startFuture?.fail(res.cause())
+                .listen(port) {
+                    if (it.succeeded()) {
+                        println("server is running on port $port")
+                        startFuture?.complete()
+                    } else {
+                        startFuture?.fail(it.cause())
+                    }
                 }
-            }
     }
 
 
     fun createRouter() = Router.router(vertx).apply {
         get("/").handler(rootHandler())
         get("/users/:id").handler(getUser2())
+
         route("/users*").handler(BodyHandler.create())
         post("/users").handler(saveUser())
     }

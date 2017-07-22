@@ -24,7 +24,7 @@ class RedisService(vertx: Vertx) {
     fun hset(keyName: String, field: String, value: String): Future<Long> {
         val future = Future.future<Long>()
 
-        redis!!.hset(keyName, field, value, future.completer())
+        redis?.hset(keyName, field, value, future.completer())
         return future
     }
 
@@ -48,7 +48,7 @@ class RedisService(vertx: Vertx) {
     fun hgetall(keyName: String): Future<JsonObject> {
         val future = Future.future<JsonObject>()
 
-        redis!!.hgetall(keyName, future.completer())
+        redis?.hgetall(keyName, future.completer())
 
         return future
     }
