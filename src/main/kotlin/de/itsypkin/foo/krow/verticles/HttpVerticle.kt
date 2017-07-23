@@ -4,10 +4,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import de.itsypkin.foo.krow.User
 import de.itsypkin.foo.krow.services.RedisService
-import de.itsypkin.foo.krow.utils.await
-import de.itsypkin.foo.krow.utils.createAsyncHandler
-import de.itsypkin.foo.krow.utils.future
-import de.itsypkin.foo.krow.utils.waitForIt
+import de.itsypkin.foo.krow.utils.*
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.Future
 import io.vertx.core.Handler
@@ -103,7 +100,7 @@ class HttpVerticle(val redisService: RedisService) : AbstractVerticle() {
 
         val user = redisService.hgetall(key).await()
 
-        user.encode()
+        HttpResponse(200, user.encode())
     }
 
 }

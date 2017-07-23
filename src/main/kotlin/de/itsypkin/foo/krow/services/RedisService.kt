@@ -29,6 +29,15 @@ class RedisService(vertx: Vertx) {
     }
 
 
+    fun increment(keyName: String, value: Long = 1): Future<Long> {
+        val future = Future.future<Long>()
+
+        redis?.incrby(keyName, value, future.completer())
+
+        return future
+    }
+
+
     fun hsetAll(keyName: String, values: Map<String, String>): Future<Unit> {
         val future = Future.future<Unit>()
         val futures = values.entries.map { (field, value) -> hset(keyName, field, value) }

@@ -23,14 +23,16 @@ suspend fun <T> Future<T>.await(): T =
     }
 
 fun <T> future(context: CoroutineContext = EmptyCoroutineContext, block: suspend () -> T): Future<T> {
-    val future = Future.future<T>()
 
-    val coroutin = Coroutine(context, future)
-    block.startCoroutine(coroutin)
-    return future
+    val continuation: FutureContinuation<T> = FutureContinuation(context)
+    block.startCoroutine(continuation)
+
+    return continuation.future
 }
 
-private class Coroutine<T>(override val context: CoroutineContext, val future: Future<T>): Continuation<T> {
+private class FutureContinuation<T>(override val context: CoroutineContext): Continuation<T> {
+    val future = Future.future<T>()
+
     override fun resume(value: T) {
         future.complete(value)
     }
@@ -41,13 +43,16 @@ private class Coroutine<T>(override val context: CoroutineContext, val future: F
 
 }
 
-fun <T>createAsyncHandler(block: suspend (rc: RoutingContext) -> T) = Handler<RoutingContext>  { rc ->
+
+
+fun createAsyncHandler(block: suspend (rc: RoutingContext) -> HttpResponse) = Handler<RoutingContext>  { rc ->
     future {
         block(rc)
     }.setHandler {
-        if (it.succeeded())
-            rc.response().end(it.result().toString())
-        else
+        if (it.succeeded()) {
+            val httpResponse = it.result()
+            rc.response().setStatusCode(httpResponse.code).end(httpResponse.body)
+        } else
             rc.response().setStatusCode(500).end(it.cause().localizedMessage)
     }
 }
@@ -62,3 +67,6 @@ fun waitForIt(vertx: Vertx, time: Long): Future<String> {
 
     return future
 }
+
+
+data class HttpResponse(val code: Int, val body: String)
